@@ -1,0 +1,27 @@
+[package]
+name = "re-rando"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+console_error_panic_hook = "0.1.7"
+getrandom = {version="0.2.10", features=["js"]}
+gloo-storage = "0.2.2"
+median = "0.3.2"
+numfmt = "1.1.1"
+rand = "0.8.5"
+sycamore = "0.8.2"
+wasm-timer = "0.2.5"
+
+[profile.dev]
+opt-level = 3
+codegen-units = 1
+lto = true
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+lto = true
+
