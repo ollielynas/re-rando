@@ -403,6 +403,7 @@ dependencies = [
  "numfmt",
  "rand",
  "sycamore",
+ "turborand",
  "wasm-timer",
 ]
 
@@ -577,6 +578,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.27",
+]
+
+[[package]]
+name = "turborand"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e28d61f1c96db8c016037a77961fa5da84fc3a57fe69a15283ace0ab1647bac0"
+dependencies = [
+ "getrandom",
+ "instant",
 ]
 
 [[package]]

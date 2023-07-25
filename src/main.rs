@@ -1,11 +1,12 @@
 
 use std::collections::{HashMap, HashSet};
 use rand::prelude::SliceRandom;
-use rand::Rng;
+// use rand::Rng;
 use sycamore::prelude::*;
 use gloo_storage::{LocalStorage, Storage};
 use median::stack::Filter;
 use numfmt::*;
+use turborand::prelude::*;
 // extern crate console_error_panic_hook;
 use wasm_timer;
 use std::panic;
@@ -28,7 +29,7 @@ struct Table {
     mean_total: i32,
     median_total: i32,
     median_points: (usize, usize),
-    rng: rand::rngs::ThreadRng,
+    rng: Rng,
     per_sec: f32,
     sum_total: f32,
     key: Vec<u8>,
@@ -52,7 +53,7 @@ impl Table {
             total_randomization: 0,
             mean_total: 0,
             median_total: 0,
-            rng: rand::thread_rng(),
+            rng: Rng::with_seed(Default::default()),
             per_sec: 0.0,
             median_points: (0,0),
             sum_total: 0.0,
@@ -68,10 +69,10 @@ impl Table {
         }
 
         let mut key_list = HashMap::new();
-        for i in keys.iter().enumerate() {
+        let binding = keys.iter().collect::<HashSet<_>>();
+        for i in binding.iter().enumerate() {
             key_list.insert(i.1, i.0);
         }
-
         
         for (i, key) in keys.iter().enumerate() {
             let k = key.clone();
@@ -143,28 +144,27 @@ impl Table {
 
     #[inline]
     fn re_randomize(&mut self) {
-        
-        self.key.shuffle(&mut self.rng);
+        self.rng.shuffle(&mut self.key);
+        // self.key.shuffle(&mut self.rng);
         self.group1_total = 0.0;
         self.counters = (0,0);
+        self.meds = (0.0,0.0);
 
         // optimization task 2
         for i in 0..self.key.len() {
             assert!(i < self.value.len());
             assert!(i < self.key.len());
-            if self.meds.0 == 0.0 && self.key[i as usize] == 1 {
+            if self.key[i as usize] == 1 {
                 if self.counters.0 == self.median_points.0 {
                     self.meds.0 = self.value[i];
                 }
                 self.counters.0 += 1;
                 self.group1_total += self.value[i];
             } else if self.meds.1 == 0.0 {
-                if self.counters.0 == self.median_points.1 {
+                if self.counters.1 == self.median_points.1 {
                     self.meds.1 = self.value[i];
                 }
-                self.counters.0 += 1;
-            } else {
-                break
+                self.counters.1 += 1;
             }
         }
 

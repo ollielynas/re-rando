@@ -13,15 +13,16 @@ median = "0.3.2"
 numfmt = "1.1.1"
 rand = "0.8.5"
 sycamore = "0.8.2"
+turborand = {version="0.10.0", features=["std"]}
 wasm-timer = "0.2.5"
 
 [profile.dev]
 opt-level = 3
 codegen-units = 1
-lto = true
+lto = false
 
 [profile.release]
 opt-level = 3
 codegen-units = 1
-lto = true
+lto = false
 
